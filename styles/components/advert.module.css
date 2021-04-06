@@ -1,0 +1,9 @@
+.advert-div{
+    margin-top: .5rem;
+}
+
+.advert-div div{
+    margin-bottom: .3rem;
+    border-radius: .2rem;
+    overflow: hidden;
+}
