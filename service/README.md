@@ -31,3 +31,7 @@ $ npm stop
 
 
 [egg]: https://eggjs.org
+
+如果在使用phpStudy的sql-font连接数据时显示 1055 错误可以在mysql的配置文件my.ini 下面的[mysqld]下新增一条
+`sql_mode = STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION`
+然后重启数据库后再尝试链接
