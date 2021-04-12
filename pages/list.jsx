@@ -1,20 +1,16 @@
 import React,{useState} from "react";
 import Head from "next/head";
+import Link from "next/link";
 import Header from "../components/Header";
 import {Row,Col,List,Breadcrumb} from "antd";
 import {CalendarFilled,FolderFilled,FireFilled} from "@ant-design/icons";
 import ListCss from "../styles/pages/list.module.css";
 import Footer from "../components/Footer";
+import serverPaths from "../config/apiUrl";
+import { article } from "../api/apiMgr";
 
-const MyList = ()=>{
-    const [listData,setListData] = useState([
-        {title:"title",content:"list Content"},
-        {title:"title",content:"list Content"},
-        {title:"title",content:"list Content"},
-        {title:"title",content:"list Content"},
-        {title:"title",content:"list Content"},
-        {title:"title",content:"list Content"}
-    ])
+const MyList = ({list})=>{
+    const [listData,setListData] = useState(list);
     return (
         <>
             <Head>
@@ -34,13 +30,17 @@ const MyList = ()=>{
                         renderItem={
                             item=>(
                                 <List.Item>
-                                    <div className={ListCss["list-title"]}>{item.title}</div>
-                                    <div className={ListCss["list-icon"]}>
-                                        <span><CalendarFilled /> 2021-04-01</span>
-                                        <span><FolderFilled /> hello</span>
-                                        <span><FireFilled /> 111112</span>
+                                    <div className={ListCss["list-title"]}>
+                                        <Link href={{pathname:"/detailed",query:{id:item.id}}}>
+                                            <a>{item.title}</a>
+                                        </Link>
                                     </div>
-                                    <div className={ListCss["list-content"]}>{item.content}</div>
+                                    <div className={ListCss["list-icon"]}>
+                                        <span><CalendarFilled /> {item.addTime}</span>
+                                        <span><FolderFilled /> {item.typeName}</span>
+                                        <span><FireFilled /> {item.viewCount}</span>
+                                    </div>
+                                    <div className={ListCss["list-content"]}>{item.introduce}</div>
                                 </List.Item>
                             )
                         }
@@ -54,6 +54,11 @@ const MyList = ()=>{
             <Footer />
         </>
     )
+}
+
+MyList.getInitialProps = async () => {
+  const res = await article.getList();
+  return {list:res.data.data};
 }
 
 export default MyList

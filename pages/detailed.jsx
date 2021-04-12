@@ -5,14 +5,13 @@ import {Row,Col, Breadcrumb,Affix} from "antd";
 import Author from "../components/Author";
 import Advert from "../components/Advert";
 import DetailedCss from "../styles/pages/detailed.module.css";
-import {CalendarFilled,FolderFilled,FireFilled} from "@ant-design/icons";
+import {CalendarFilled,FolderFilled,FireFilled, FundTwoTone} from "@ant-design/icons";
 
-import ReactMarkDown from "react-markdown";
-import gfm from "remark-gfm";
-
-import MarkNav from "markdown-navbar";
-import "markdown-navbar/dist/navbar.css";
-
+import marked from "marked";
+import hljs from "highlight.js";
+import "highlight.js/styles/monokai-sublime.css";
+import Tocify from "../components/tocify.tsx";
+import {article} from "../api/apiMgr";
 const Detailed = ()=>{
     let markdown='\n# P01:课程介绍和环境搭建\n' +
   '[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n' +
@@ -47,7 +46,31 @@ const Detailed = ()=>{
   '> aaaaaaaaa\n' +
   '>> bbbbbbbbb\n' +
   '>>> cccccccccc\n\n'+
-  '` var a=11; `';
+  '``` \n var a=11; \n```';
+
+    const tocify = new Tocify();
+    const renderer = new marked.Renderer();
+    
+    renderer.heading = function(text,level,raw){
+        const anchor = tocify.add(text,level);
+        return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
+    }
+
+    marked.setOptions({
+        renderer:renderer,
+        gfm:true,
+        pedantic:false,
+        sanitize:false,
+        tables:true,
+        breaks:false,
+        smartLists:true,
+        highlight:function(code){
+            return hljs.highlightAuto(code).value;
+        }
+    })
+
+    const html = marked(markdown);
+
     return (
         <>
             <Head>
@@ -76,13 +99,9 @@ const Detailed = ()=>{
                                 <span><FireFilled /> 111112</span>
                             </div>
 
-                            <div className={DetailedCss["detailed-content"]}>
-                                <ReactMarkDown 
-                                plugins={[gfm]} 
-                                children={markdown} 
-                                allowDangerousHtml={false} 
-                                // renderer={renderers} 
-                                />
+                            <div className={DetailedCss["detailed-content"]}
+                               dangerouslySetInnerHTML={{__html:html}} 
+                            >
                             </div>
                         </div>
                     </div>
@@ -93,13 +112,9 @@ const Detailed = ()=>{
                     <Advert></Advert>
                     <Affix offsetTop={5}>
                         <div className="detailed-nav commen-box">
-                            <div className="nav-title">title</div>
-                            <MarkNav
-                            className="article-menu"
-                            source={markdown}
-                            headingTopOffest={0}
-                            ordered={false}
-                            ></MarkNav>
+                            <div className="toc-list">
+                                {tocify && tocify.render()}
+                            </div>
                         </div>
                     </Affix>
                 </Col>
@@ -107,4 +122,11 @@ const Detailed = ()=>{
         </>
     )
 }
+
+Detailed.getInitialProps = async (context) => {
+    let id = context.query.id;
+    const res = await article.getDetail(id);
+    return {list:res.data.data};
+}
+
 export default Detailed;

@@ -5,9 +5,11 @@ import Header from "../components/Header";
 import Author from "../components/Author";
 import Advert from "../components/Advert";
 import Footer from "../components/Footer";
+import axios from "axios";
 
-const Home = () => (
-  <>
+const Home = () => {
+  return (
+    <>
     <Head>
       <title>Home</title>
     </Head>
@@ -24,6 +26,7 @@ const Home = () => (
     </Row>
     <Footer />
   </>
-)
+  )
+}
 
 export default Home;

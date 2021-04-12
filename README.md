@@ -37,19 +37,25 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 Nextjs 在9.5之后就不需要使用`@zeit/next-css`进行样式的导入处理了，可以直接使用`import "xxx.css"`进行导入。
 
 
-Global CSS cannot be imported from files other than your Custom <App>. Please move all global CSS imports to pages\_app.js. Or convert the import to Component-Level CSS (CSS Modules).
+`Global CSS cannot be imported from files other than your Custom <App>. Please move all global CSS imports to pages\_app.js. Or convert the import to Component-Level CSS (CSS Modules).`
 
 这个错误是因为Nextjs 放弃的队文件中的全局css的支持，会把文件名中没有`module`的css文件如`header.css`当做是全局的css文件处理，而全局样式文件只能在_app.js中导入，如果想要使用局部自定义的样式文件就需要命名成`header.module.css`。对于模块里面的类可以使用`import header from "./header.module.css`进行引入，使用类样式可以`className={header["header-logo"]}`;
 
 antd 在4.1版本之后不会自带Icon库，需要安装`@ant-design/icons`库，进行模块导入使用`import { StarOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';`
 
+`Selector "pre" is not pure (pure selectors must contain at least one local class or id)`
 
+这个报错主要是因为在模块样式文件中是不支持直接写标签样式的，如在页面中要为`<div className='content'><code>aaaa</code></div>`标签设置样式`code{color:red}`这样，的时候就会报错，可以增加父选择器来解决`.content code{color:red}`;
+
+
+```
 源文本中存在无法识别的标记。
 所在位置 行:1 字符: 7
 + npm i  <<<< @ant-design/icons -S
     + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecor 
    dException
     + FullyQualifiedErrorId : UnrecognizedToken
+```
 
 方法一：
 使用cmd 执行该句可以。

@@ -39,6 +39,18 @@ module.exports = appInfo => {
     agent: false,
   };
 
+  //跨域配置
+  config.security = {
+    scrf:{
+      enable:false
+    },
+    domainWhiteList:['*']
+  };
+  config.cors = {
+    origin:"*",
+    allowMethods:"GET,POST,PUT,HEAD,DELETE,PATCH,OPTIONS"
+  }
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
