@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Header from "../components/Header";
@@ -6,11 +6,13 @@ import {Row,Col,List,Breadcrumb} from "antd";
 import {CalendarFilled,FolderFilled,FireFilled} from "@ant-design/icons";
 import ListCss from "../styles/pages/list.module.css";
 import Footer from "../components/Footer";
-import serverPaths from "../config/apiUrl";
 import { article } from "../api/apiMgr";
 
 const MyList = ({list})=>{
     const [listData,setListData] = useState(list);
+    useEffect(()=>{
+        setListData(list);
+    },[])
     return (
         <>
             <Head>
@@ -56,9 +58,10 @@ const MyList = ({list})=>{
     )
 }
 
-MyList.getInitialProps = async () => {
-  const res = await article.getList();
-  return {list:res.data.data};
+MyList.getInitialProps = async (ctx) => {
+    let id = ctx.query.id;
+    const res = await article.getListByType();
+    return {list:res.data.data};
 }
 
 export default MyList
