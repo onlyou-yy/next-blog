@@ -1,14 +1,13 @@
-import React，{useEffect,useState} from "react";
+import React,{useEffect,useState} from "react";
 import Router from "next/router";
 import HeaderCss from "../styles/components/header.module.css";
 import {Row,Col,Menu} from "antd";
 import { HomeOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
 import {article} from "../api/apiMgr";
 
 const Header = () => {
     const [navArray,setNavArray] = useState([]);
-    useEffect(()=>{
+    useEffect(async ()=>{
         let res = await article.getNavList();
         let nav = res.data.data;
         setNavArray(nav);

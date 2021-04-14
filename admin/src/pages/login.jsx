@@ -11,6 +11,7 @@ const Login = () => {
         setIsLoading(true);
         setTimeout(()=>{
             setIsLoading(false);
+
         },1000);
     }
 
