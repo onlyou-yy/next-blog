@@ -9,7 +9,7 @@ class MainController extends Controller{
 
     async checkLogin(){
         let {useName,password} = this.ctx.body;
-        let res = this.ctx.mysql.query("blog_user",{useName,password});
+        let res = await this.ctx.mysql.query("blog_user",{useName,password});
 
         if(res.length > 0){
             let openId = Date.now();
@@ -18,6 +18,11 @@ class MainController extends Controller{
         }else{
             this.ctx.body = {data:{msg:"登录失败",statusCode:"401",openId:null}}
         }
+    }
+
+    async getBlogType(){
+        let res = await this.ctx.mysql.select("blog_type",{});
+        this.ctx.body = {data:res}
     }
 }
 
